@@ -21,7 +21,7 @@ $routes->get('/', 'Home');
 
 $routes->get('/admin', 'admin::index');
 $routes->get('/admin/pesanan', 'pesanan::index');
-$routes->get('/admin/jasa', 'jasa::index'); 
+$routes->get('/admin/jasa', 'jasa::index');
 $routes->get('/admin/admin', 'admin::index');
 $routes->get('/admin/register', 'register::index');
 $routes->get('/admin/kasir', 'kasir::index');
@@ -53,7 +53,7 @@ $routes->post('admin/logout', 'Login::logout');
 
 
 $routes->get('/jasa', 'jasa::index');
-$routes->get('/pesanan', 'Admin::list_pesanan');
+$routes->get('/pesanan', 'Admin::list_pesananadm');
 
 $routes->get('/login', 'Login::index');
 $routes->get('/login_kasir', 'Login_kasir::index');
@@ -89,7 +89,12 @@ $routes->group('admin', ['namespace' => 'App\Controllers'], function ($routes) {
     // Pesanan routes
     $routes->get('list_pesanan', 'Admin::list_pesanan');
     $routes->get('edit_pesanan/(:num)', 'Admin::edit_pesanan/$1');
-    $routes->post('update_pesanan/(:num)', 'Admin::update_pesanan/$1');  // Change 'put' to 'post'
+    $routes->post('update_pesanan/(:num)', 'Admin::update_pesanan/$1');
     $routes->delete('delete_pesanan/(:num)', 'Admin::delete_pesanan/$1');
 });
 $routes->get('edit_pesanan/(:num)', 'admin::edit_pesanan/$1');
+$routes->get('edit_pesananadm/(:num)', 'admin::edit_pesananadm/$1');
+
+$routes->get('print_nota/(:num)', 'Print_nota::nota/$1');
+$routes->get('admin/add_custom_pesanan/(:num)', 'Admin::add_custom_pesanan/$1');
+$routes->get('admin/add_custom_pesanan/(:num)', '\App\Controllers\Admin::add_custom_pesanan/$1');

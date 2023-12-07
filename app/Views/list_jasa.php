@@ -7,13 +7,18 @@
 <section class="section">
     <div class="section-header">
         <h1>List Jasa</h1>
+        <div class="section-header-button">
+            <?php if (!empty($jasas)) : ?>
+                <?php $firstJasa = reset($jasas); ?>
+                <a href="<?= site_url('admin/add_custom_pesanan/' . $firstJasa->id_jasa) ?>" class="btn btn-primary">Pesanan Custom</a>
+            <?php endif; ?>
+        </div>
     </div>
     <div class="row">
 
         <?php foreach ($jasas as $jasa) : ?>
             <div class="col-lg-3 col-md-6 col-sm-6 col-12 card-link">
                 <a href="<?= site_url('pesanan/form/' . $jasa->id_jasa) ?>">
-                    <!-- Ganti 'your_controller' dan 'your_method' sesuai dengan controller dan method yang sesuai -->
                     <div class="card card-statistic-1">
                         <div class="card-icon bg-dark">
                             <i class="fas fa-th-list"></i>

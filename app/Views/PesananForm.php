@@ -1,9 +1,4 @@
-<title>Kasir &mdash; Laundry</title>
-<?= $this->extend('layout/default') ?>
-<?= $this->section('tittle'); ?>
-
-<?= $this->endSection(); ?>
-<?= $this->section('content'); ?>
+<!-- ... (previous HTML code) ... -->
 
 <section class="section">
     <div class="section-header">
@@ -12,16 +7,27 @@
 
     <div class="section-body">
         <form action="<?= site_url('admin/simpan_pesanan') ?>" method="post">
-            <input type="hidden" name="id_jasa" value="<?= $jasa->id_jasa ?>">
             <input type="hidden" name="id_kasir" value="<?= $id_kasir ?>">
             <div class="form-group">
-                <div class="form-group">
-                    <label for="nama_pelanggan">Nama Pelanggan</label>
-                    <input type="text" name="nama_pelanggan" class="form-control" required>
-                </div>
-                <label for="alamat">Alamat Pelanggan</label>
-                <input type="text" name="alamat" class="form-control" required>
+                <label for="id_jasa">Jasa</label>
+                <select name="id_jasa" class="form-control" required>
+                    <option value="" selected disabled>Select Jasa</option>
+                    <?php foreach ($jasas as $jasa) : ?>
+                        <option value="<?= $jasa->id_jasa ?>"><?= $jasa->nama_jasa ?></option>
+                    <?php endforeach; ?>
+                    <option value="0">Custom</option>
+                </select>
             </div>
+            <div class="form-group" id="customJasa" style="display: none;">
+                <label for="custom_jasa">Custom Jasa</label>
+                <input type="text" name="custom_jasa" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="nama_pelanggan">Nama Pelanggan</label>
+                <input type="text" name="nama_pelanggan" class="form-control" required>
+            </div>
+            <label for="alamat">Alamat Pelanggan</label>
+            <input type="text" name="alamat" class="form-control" required>
             <div class="form-group">
                 <label for="no_hp">Nomor HP</label>
                 <input type="text" name="no_hp" class="form-control" required>
@@ -39,7 +45,19 @@
             <a href="<?= site_url('list_jasa') ?>" class="btn btn-secondary">Kembali</a>
         </form>
     </div>
-
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show/hide custom Jasa input based on the selection
+        const jasaSelect = document.querySelector('select[name="id_jasa"]');
+        const customJasaInput = document.getElementById('customJasa');
+
+        jasaSelect.addEventListener('change', function() {
+            const selectedJasa = this.value;
+            customJasaInput.style.display = selectedJasa === '0' ? 'block' : 'none';
+        });
+    });
+</script>
 
 <?= $this->endSection(); ?>

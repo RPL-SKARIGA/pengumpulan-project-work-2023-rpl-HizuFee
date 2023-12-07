@@ -2,8 +2,15 @@
 
 namespace App\Controllers;
 
+use App\Models\JasaModel;
+
 class admin extends BaseController
 {
+    protected $jasaModel;
+    public function __construct()
+    {
+        $this->jasaModel = new JasaModel();
+    }
     public function delete_pesanan($id_pesanan)
     {
         $pesananModel = new \App\Models\PesananModel();
@@ -30,7 +37,22 @@ class admin extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
     }
+    public function edit_pesananadm($id_pesanan = null)
+    {
+        $pesananModel = new \App\Models\PesananModel();
 
+        if ($id_pesanan != null) {
+            $data['row'] = $pesananModel->find($id_pesanan);
+
+            if ($data['row']) {
+                return view('editpesananadm', $data);
+            } else {
+                throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+            }
+        } else {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+    }
 
 
     public function update_pesanan($id_pesanan)
@@ -48,18 +70,47 @@ class admin extends BaseController
         session()->setFlashdata('success', 'Pesanan berhasil diupdate!');
         return redirect()->to(site_url('admin/list_pesanan'));
     }
+    public function update_pesananadm($id_pesanan)
+    {
+        $data = $this->request->getPost();
+        $pesananModel = new \App\Models\PesananModel();
 
+        // Proses validasi atau manipulasi data lainnya jika diperlukan
+
+        unset($data['_method']);
+
+        $pesananModel->update($id_pesanan, $data);
+
+        // Redirect with SweetAlert2 notification
+        session()->setFlashdata('success', 'Pesanan berhasil diupdate!');
+        return redirect()->to(site_url('pesanan'));
+    }
+    public function list_pesananadm()
+    {
+        // Load the Pesanan model
+        $pesananModel = new \App\Models\PesananModel();
+
+        // Fetch data with a join
+        $data['pesanan'] = $pesananModel->select('pesanan.id_pesanan, pesanan.nama_jasa, pesanan.nama_kasir, pesanan.nama_pelanggan, pesanan.status, pesanan.jumlah, pesanan.tanggal, pesanan.alamat, jasa.nama_jasa as nama_jasa') // Select columns from pesanan and jasa table
+            ->join('jasa', 'jasa.id_jasa = pesanan.id_jasa', 'left') // Perform a left join with jasa table
+            ->findAll();
+
+        // Pass data to the view
+        return view('list_pesananadm', $data);
+    }
 
     public function list_pesanan()
     {
         // Load the Pesanan model
-        $pesananModel = new \App\Models\PesananModel(); // Check the namespace
+        $pesananModel = new \App\Models\PesananModel();
 
-        // Retrieve pesanan data from the database
-        $data['pesanan'] = $pesananModel->findAll();
+        // Fetch data with a join
+        $data['pesanan'] = $pesananModel->select('pesanan.id_pesanan, pesanan.nama_jasa, pesanan.nama_kasir, pesanan.nama_pelanggan, pesanan.status, pesanan.jumlah, pesanan.tanggal, pesanan.alamat, jasa.nama_jasa as nama_jasa') // Select columns from pesanan and jasa table
+            ->join('jasa', 'jasa.id_jasa = pesanan.id_jasa', 'left') // Perform a left join with jasa table
+            ->findAll();
 
         // Pass data to the view
-        return view('list_pesanan', $data); // Adjust the view file path
+        return view('list_pesanan', $data);
     }
     public function index()
     {
@@ -184,6 +235,19 @@ class admin extends BaseController
             return redirect()->back()->with('error', 'Gagal menyimpan data kasir.');
         }
     }
+    public function add_custom_pesanan($id_jasa)
+    {
+        // Assuming you have a model to fetch the jasa data
+        $jasaModel = new \App\Models\JasaModel();
+        $jasa = $jasaModel->find($id_jasa);
+
+        // Pass the jasa data to the view
+        $data['jasa'] = $jasa;
+
+        // Load the custom order form view
+        return view('add_custom_pesanan', $data);
+    }
+
     public function edit($id = null)
     {
         $data['flashdata'] = session()->getFlashdata('success'); // Set $flashdata here

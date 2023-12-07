@@ -1,8 +1,6 @@
-<?= $this->extend('layout/default'); ?>
-
+<?= $this->extend('layout/default') ?>
 <?= $this->section('tittle'); ?>
 <title>Data Pesanan &mdash; Laundry</title>
-<?= $this->extend('layout/defaultsir') ?>
 <?= $this->endSection(); ?>
 
 <?= $this->section('content'); ?>
@@ -20,34 +18,35 @@
                 <table class="table table-striped table-md">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>Nama Kasir</th>
                             <th>Nama Pelanggan</th>
                             <th>Status</th>
                             <th>Harga</th>
                             <th>Tanggal</th>
                             <th>Alamat</th>
+                            <th>Nama Jasa</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($pesanan as $row) : ?>
                             <tr>
-                                <td><?= $row['id_pesanan']; ?></td>
                                 <td><?= $row['nama_kasir']; ?></td>
                                 <td><?= $row['nama_pelanggan']; ?></td>
                                 <td><?= $row['status']; ?></td>
                                 <td><?= $row['jumlah']; ?></td>
                                 <td><?= $row['tanggal']; ?></td>
                                 <td><?= $row['alamat']; ?></td>
+                                <td><?= $row['nama_jasa']; ?></td>
                                 <td>
-                                    <!-- Add your edit and delete links/buttons here -->
-                                    <a href="<?= site_url('admin/edit_pesananadm/' . $row['id_pesanan']); ?>" class="btn btn-warning btn-sm"><i class="fas fa-pencil-alt"></i></a>
+                                    <a href="<?= site_url('edit_pesananadm/' . $row['id_pesanan']); ?>" class="btn btn-warning btn-sm"><i class="fas fa-pencil-alt"></i></a>
                                     <form action="<?= site_url('admin/delete_pesanan/' . $row['id_pesanan']); ?>" method="post" class="d-inline">
                                         <input type="hidden" name="csrf_test_name" value="<?= csrf_hash(); ?>">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button class="btn btn-danger btn-sm delete-pesanan" data-id="<?= $row['id_pesanan']; ?>"><i class="fas fa-trash"></i></button>
                                     </form>
+
+                                    <a href="<?= site_url('print_nota/' . $row['id_pesanan']); ?>" class="btn btn-info btn-sm" target="_blank"><i class="fas fa-print"></i></a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
